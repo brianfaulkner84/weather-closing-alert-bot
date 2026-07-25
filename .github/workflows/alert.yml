@@ -1,0 +1,55 @@
+
+## .github/workflows/alert.yml
+
+```yaml
+name: Weather & School Closing Alert
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    # Hourly, midnight through 8:00 AM Central Time.
+    #
+    # GitHub Actions cron always runs in UTC. This schedule is set for
+    # Central Standard Time (CST, UTC-6): 00:00-08:00 CST == 06:00-14:00 UTC.
+    #
+    # IMPORTANT: during Central Daylight Time (CDT, UTC-5, roughly mid-March
+    # to early November) this needs to be shifted one hour earlier in UTC
+    # ('0 5-13 * * *') to keep covering local midnight-8am. GitHub Actions
+    # does not adjust cron for DST automatically, so update this manually
+    # around each DST change.
+    - cron: "0 6-14 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  check-and-alert:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run alert bot
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: python alert_bot.py
+
+      - name: Commit updated state.json
+        run: |
+          if ! git diff --quiet -- state.json; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add state.json
+            git commit -m "Update alert state [skip ci]"
+            git push
+          else
+            echo "state.json unchanged; nothing to commit."
+          fi
