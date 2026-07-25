@@ -323,7 +323,18 @@ def main():
     weather_by_location = {}
     for display_name, query in LOCATIONS:
         try:
-            lat, lon = geocode_location(query)
+            try:
+                lat, lon = geocode_location(query)
+            except Exception as exc:
+                if display_name in FALLBACK_COORDS:
+                    print(
+                        f"Warning: geocoding failed for {display_name}, using fallback "
+                        f"coordinates: {exc}",
+                        file=sys.stderr,
+                    )
+                    lat, lon = FALLBACK_COORDS[display_name]
+                else:
+                    raise
             weather_by_location[display_name] = fetch_weather(lat, lon)
         except Exception as exc:
             print(f"Warning: weather check failed for {display_name}: {exc}", file=sys.stderr)
