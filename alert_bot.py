@@ -33,6 +33,16 @@ DISTRICTS = ["Mindoro", "Tomah", "Sparta", "La Crosse"]
 COLD_THRESHOLD_F = 0
 HEAT_THRESHOLD_F = 90
 
+# Open-Meteo's geocoder (backed by GeoNames) doesn't have every small
+# unincorporated Wisconsin township at a resolvable granularity. Burns, WI
+# (an unincorporated town in La Crosse County) failed to geocode in
+# practice, so it falls back to this approximate town-center coordinate
+# rather than failing the whole location silently. Geocoding is still tried
+# first for every location; this is only used if that lookup comes back empty.
+FALLBACK_COORDS = {
+    "Burns": (43.9336, -91.1),
+}
+
 LOCAL_TZ = ZoneInfo("America/Chicago")
 STATE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "state.json")
 
