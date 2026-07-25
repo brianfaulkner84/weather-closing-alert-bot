@@ -1,7 +1,3 @@
-
-## .github/workflows/alert.yml
-
-```yaml
 name: Weather & School Closing Alert
 
 on:
