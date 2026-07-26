@@ -1,4 +1,8 @@
 {
-  "last_digest_date": "2026-07-25",
-  "last_alerts": []
+  "last_digest_date": "2026-07-26",
+  "last_alerts": [
+    "heat:Burns",
+    "heat:La Crosse",
+    "heat:Tomah"
+  ]
 }
