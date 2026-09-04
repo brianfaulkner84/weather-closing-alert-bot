@@ -1,6 +1,8 @@
 {
-  "last_digest_date": "2026-09-03",
+  "last_digest_date": "2026-09-04",
   "last_alerts": [
-    "heat:Burns"
+    "heat:Burns",
+    "heat:La Crosse",
+    "heat:Tomah"
   ]
 }
